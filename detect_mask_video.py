@@ -59,27 +59,32 @@ print("[INFO] starting video stream...")
 vs = VideoStream(src=0).start()
 time.sleep(2.0)
 
-
+wearingMask=False
 while True:
 	frameval = vs.read()
 	frameval = imutils.resize(frameval, width=400)
 	(locations, predict) = mask_detect(frameval, faceNet, maskNet)
-
+	
 	for (box, predict) in zip(locations, predict):
 		(s_X, s_Y, e_X, e_Y) = box
 		(m, wm) = predict
 		lb = "Mask" if m > wm else "No Mask"
+		wearingMask = True if m > wm else False
 		clr = (0, 255, 0) if lb == "Mask" else (0, 0, 255)
 		lb = "{}: {:.2f}%".format(lb, max(m, wm) * 100)
 		cv2.putText(frameval, lb, (s_X, s_Y - 10),
 			cv2.FONT_HERSHEY_SIMPLEX, 0.45, clr, 2)
 		cv2.rectangle(frameval, (s_X, s_Y), (e_X, e_Y), clr, 2)
+		
 
 
 	cv2.imshow("Frame", frameval)
 	key = cv2.waitKey(1) & 0xFF
+	break
 	if key == ord("q"):
 		break
+	
 
 cv2.destroyAllWindows()
 vs.stop()
+print(wearingMask)
