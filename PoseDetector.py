@@ -17,6 +17,7 @@ class poseDetectorkit():
 
 
     #Creatign a method to find the pose:
+
     def findPose(self, img, draw = True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.pose.process(imgRGB)
@@ -27,6 +28,7 @@ class poseDetectorkit():
         return img
 
     # Creatign a method to find the landmarks:
+
     def findlandmarks(self, img, draw=True):
         self.landmarkList = []
         if self.results.pose_landmarks:
